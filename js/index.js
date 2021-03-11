@@ -37,10 +37,13 @@ const rowMarkup = gallery.reduce(
     href="${original}"
   >
     <img
+      loading="lazy"
       class="gallery__image"
-      src="${preview}"
+      data-src="${preview}"
       data-source="${original}"
       alt="${description}"
+      width="640"
+      height="480" 
     />
   </a>
 </li>`,
@@ -49,6 +52,22 @@ const rowMarkup = gallery.reduce(
 
 ref.galleryList.insertAdjacentHTML('beforeend', rowMarkup)
 
+if ('loading' in HTMLImageElement.prototype) {
+  console.log('Браузер поддерживает lazyload.')
+  const lazyImages = document.querySelectorAll('img[loading="lazy"]')
+
+  lazyImages.forEach((img) => {
+    img.src = img.dataset.src
+  })
+} else {
+  console.log('Браузер НЕ поддерживает lazyload!')
+
+  const script = document.createElement('script')
+
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.0/lazysizes.min.js'
+  script.integrity = 'sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg=='
+  script.crossOrigin = 'anonymous'
+}
 const handlerOnGallery = (e) => {
   e.preventDefault()
   ref.modalWindow.classList.add('is-open')
