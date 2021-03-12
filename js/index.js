@@ -29,7 +29,7 @@ const imgArr = gallery.map(({ original }) => original)
 let currentImg = 0
 
 const rowMarkup = gallery.reduce(
-  (acc, { preview, original, description }, index) =>
+  (acc, { preview, original, description }) =>
     acc +
     `<li class="gallery__item">
   <a
@@ -53,21 +53,19 @@ const rowMarkup = gallery.reduce(
 ref.galleryList.insertAdjacentHTML('beforeend', rowMarkup)
 
 if ('loading' in HTMLImageElement.prototype) {
-  console.log('Браузер поддерживает lazyload.')
-  const lazyImages = document.querySelectorAll('img[loading="lazy"]')
-
-  lazyImages.forEach((img) => {
-    img.src = img.dataset.src
-  })
+  console.log('Браузер поддерживает lazyload')
+  addSrcAttrToLazyImages()
 } else {
-  console.log('Браузер НЕ поддерживает lazyload!')
-
-  const script = document.createElement('script')
-
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.0/lazysizes.min.js'
-  script.integrity = 'sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg=='
-  script.crossOrigin = 'anonymous'
+  console.log('Браузер НЕ поддерживает lazyload')
+  addLazySizesScript()
 }
+
+const lazyImages = document.querySelectorAll('img[data-src]')
+
+lazyImages.forEach((image) => {
+  image.addEventListener('load', onImageLoaded, { once: true })
+})
+
 const handlerOnGallery = (e) => {
   e.preventDefault()
   ref.modalWindow.classList.add('is-open')
@@ -104,4 +102,28 @@ function remove() {
   ref.modalWindow.classList.remove('is-open')
   ref.modalImg.src = ''
   ref.modalImg.alt = ''
+}
+
+//! for lazyLoading
+
+function onImageLoaded(evt) {
+  console.log('Картинка загрузилась')
+  evt.target.classList.add('appear')
+}
+
+function addLazySizesScript() {
+  const script = document.createElement('script')
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js'
+  script.integrity = 'sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg=='
+  script.crossOrigin = 'anonymous'
+
+  document.body.appendChild(script)
+}
+
+function addSrcAttrToLazyImages() {
+  const lazyImages = document.querySelectorAll('img[loading="lazy"]')
+
+  lazyImages.forEach((img) => {
+    img.src = img.dataset.src
+  })
 }
