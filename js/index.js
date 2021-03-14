@@ -16,7 +16,9 @@
 
 import gallery from './gallery-items.js'
 
+//getting references to DOM objects
 const ref = {
+  body: document.querySelector('body'),
   galleryList: document.querySelector('.js-gallery'),
   modalWindow: document.querySelector('.js-lightbox'),
   modalImg: document.querySelector('.lightbox__image'),
@@ -28,6 +30,7 @@ const imgArr = gallery.map(({ original }) => original)
 
 let currentImg = 0
 
+//rendering the markup
 const rowMarkup = gallery.reduce(
   (acc, { preview, original, description }) =>
     acc +
@@ -42,8 +45,6 @@ const rowMarkup = gallery.reduce(
       data-src="${preview}"
       data-source="${original}"
       alt="${description}"
-      width="640"
-      height="480" 
     />
   </a>
 </li>`,
@@ -52,26 +53,12 @@ const rowMarkup = gallery.reduce(
 
 ref.galleryList.insertAdjacentHTML('beforeend', rowMarkup)
 
-if ('loading' in HTMLImageElement.prototype) {
-  console.log('Браузер поддерживает lazyload')
-  addSrcAttrToLazyImages()
-} else {
-  console.log('Браузер НЕ поддерживает lazyload')
-  addLazySizesScript()
-}
-
-const lazyImages = document.querySelectorAll('img[data-src]')
-
-lazyImages.forEach((image) => {
-  image.addEventListener('load', onImageLoaded, { once: true })
-})
-
 const handlerOnGallery = (e) => {
   e.preventDefault()
   ref.modalWindow.classList.add('is-open')
-
   ref.modalImg.src = e.target.dataset.source
   ref.modalImg.alt = e.target.alt
+  ref.body.style.overflow = 'hidden'
 
   currentImg = imgArr.indexOf(ref.modalImg.src)
 }
@@ -80,10 +67,13 @@ const classListRemover = (e) => {
   remove()
 }
 
-window.addEventListener('keyup', (e) => {
+// close the modal window by pressing the key
+window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     remove()
   }
+
+  //switching images by pressing a key
   if (e.key === 'ArrowRight') {
     currentImg === imgArr.length - 1 ? (currentImg = 0) : (currentImg += 1)
     ref.modalImg.src = imgArr[currentImg]
@@ -102,24 +92,44 @@ function remove() {
   ref.modalWindow.classList.remove('is-open')
   ref.modalImg.src = ''
   ref.modalImg.alt = ''
+  ref.body.style.overflow = ''
 }
 
 //! for lazyLoading
 
+// check whether browsers support lazy loading
+if ('loading' in HTMLImageElement.prototype) {
+  console.log('The browser supports lazy load')
+  addSrcAttrToLazyImages()
+} else {
+  console.log('The browser DOES NOT support lazyload')
+  addLazySizesScript()
+}
+
+const lazyImages = document.querySelectorAll('img[data-src]')
+
+lazyImages.forEach((image) => {
+  image.addEventListener('load', onImageLoaded, { once: true })
+})
+
+// Shows how many images were uploaded
 function onImageLoaded(evt) {
-  console.log('Картинка загрузилась')
+  console.log('The image loaded')
   evt.target.classList.add('appear')
 }
 
+// add script with function
 function addLazySizesScript() {
   const script = document.createElement('script')
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js'
+
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.0/lazysizes.min.js'
   script.integrity = 'sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg=='
   script.crossOrigin = 'anonymous'
 
   document.body.appendChild(script)
 }
 
+// add src attribute to lazy images
 function addSrcAttrToLazyImages() {
   const lazyImages = document.querySelectorAll('img[loading="lazy"]')
 

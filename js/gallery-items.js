@@ -120,9 +120,9 @@ export default [
     description: 'Winter Conifers Sunset',
   },
   {
-    preview: 'https://cdn.pixabay.com/photo/2021/03/06/19/36/sea-6074538__340.jpg',
-    original: 'https://cdn.pixabay.com/photo/2021/03/06/19/36/sea-6074538_1280.jpg',
-    description: 'Sea Rocks Mountains',
+    preview: 'https://cdn.pixabay.com/photo/2015/10/30/15/49/italy-1014310__340.jpg',
+    original: 'https://cdn.pixabay.com/photo/2015/10/30/15/49/italy-1014310_1280.jpg',
+    description: 'Italy, Rome, Colosseum',
   },
   {
     preview: 'https://cdn.pixabay.com/photo/2021/02/10/22/23/lake-6003746__340.jpg',
