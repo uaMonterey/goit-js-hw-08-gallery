@@ -57,7 +57,6 @@ const handlerOnGallery = (e) => {
   e.preventDefault()
   ref.modalWindow.classList.add('is-open')
   ref.modalImg.src = e.target.dataset.source
-  ref.modalImg.alt = e.target.alt
   ref.body.style.overflow = 'hidden'
 
   currentImg = imgArr.indexOf(ref.modalImg.src)
@@ -77,10 +76,14 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') {
     currentImg === imgArr.length - 1 ? (currentImg = 0) : (currentImg += 1)
     ref.modalImg.src = imgArr[currentImg]
+    ref.modalImg.alt = gallery[currentImg].description
+    console.log(ref.modalImg.alt)
   }
   if (e.key === 'ArrowLeft') {
     currentImg === 0 ? (currentImg = imgArr.length - 1) : (currentImg -= 1)
     ref.modalImg.src = imgArr[currentImg]
+    ref.modalImg.alt = gallery[currentImg].description
+    console.log(ref.modalImg.alt)
   }
 })
 

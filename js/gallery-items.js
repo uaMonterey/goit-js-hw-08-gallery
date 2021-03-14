@@ -122,7 +122,7 @@ export default [
   {
     preview: 'https://cdn.pixabay.com/photo/2015/10/30/15/49/italy-1014310__340.jpg',
     original: 'https://cdn.pixabay.com/photo/2015/10/30/15/49/italy-1014310_1280.jpg',
-    description: 'Italy, Rome, Colosseum',
+    description: 'Colosseum',
   },
   {
     preview: 'https://cdn.pixabay.com/photo/2021/02/10/22/23/lake-6003746__340.jpg',
